@@ -6,9 +6,16 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors(
+    {
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+    }
+));
 
 app.use(bodyParser.json({ limit: '5mb' }));
+// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use('/infographics', infographicRoutes);
 

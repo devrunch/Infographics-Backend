@@ -12,9 +12,9 @@ router.get('/tags', infographicController.allAvailbleTags);
 router.get('/search', infographicController.searchInfographics);
 router.get('/:id', infographicController.getInfographic);
 router.post('/:id/download', infographicController.downloadInfographic);
-// Update Infographic
-router.patch('/:id',  infographicController.updateInfographic);
-// Delete Infographic
+router.patch('/:id', infographicController.updateInfographic);
 router.delete('/:id', infographicController.deleteInfographic);
+// Update Infographic
+// Delete Infographic
 
 module.exports = router;
