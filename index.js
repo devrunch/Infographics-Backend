@@ -6,17 +6,26 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 dotenv.config();
 const app = express();
-app.use(cors(
-    {
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
-    }
-));
+app.use(cors());
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
+  });
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://infographics-admin.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+  });
+  
+  // Handle preflight requests
+  app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'https://infographics-admin.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.send();
   });
 
 app.use(bodyParser.json({ limit: '5mb' }));
