@@ -198,3 +198,27 @@ exports.downloadInfographic = async (req, res) => {
         res.status(500).send(err.message);
     }
 }
+
+exports.categoryInfographics = async (req, res) => {
+    try {
+        // Aggregate to get all unique tags
+        const tagsAggregation = await Infographic.aggregate([
+            { $unwind: "$tags" },
+            { $group: { _id: "$tags" } }
+        ]);
+
+        const uniqueTags = tagsAggregation.map(tag => tag._id);
+
+        // Fetch one infographic for each unique tag
+        const infographics = await Promise.all(uniqueTags.map(async (tag) => {
+            return Infographic.findOne({ tags: tag }).exec();
+        }));
+
+        // Filter out null results if no infographic was found for a tag
+        const filteredInfographics = infographics.filter(infographic => infographic !== null);
+
+        res.status(200).json(filteredInfographics);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching infographics', error });
+    }
+}

@@ -8,6 +8,7 @@ router.post('/upload', infographicController.uploadMiddleware, infographicContro
 // Get all Infographics
 router.get('/', infographicController.getAllInfographics);
 router.get('/all', infographicController.getAllInfographics1);
+router.get('/categories', infographicController.categoryInfographics);
 router.get('/tags', infographicController.allAvailbleTags);
 router.get('/search', infographicController.searchInfographics);
 router.get('/:id', infographicController.getInfographic);
