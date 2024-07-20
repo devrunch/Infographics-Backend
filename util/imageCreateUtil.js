@@ -16,6 +16,8 @@ async function createFooterImage(footerInfo, width, bgColor, height) {
           }
         .footer {
           background:${bgColor || '#000'};
+          padding-top: 5px;
+          padding-bottom: 5px;
           }
         .wrapper {
           display: flex;
@@ -153,12 +155,12 @@ async function addFooterToImage(imageBuffer, footerInfo, bgColor) {
     const height = metadata.height;
 
     // Create the footer image using HTML and CSS
-    const footerBuffer = await createFooterImage(footerInfo, width, bgColor, height / 8);
+    const footerBuffer = await createFooterImage(footerInfo, width, bgColor, height / 7);
 
     // Composite the footer with the original image
     return await sharp(imageBuffer)
       .extend({
-        bottom: 150,
+        bottom: height/7,
         background: { r: 0, g: 0, b: 0, alpha: 0 }
       })
       .composite([{ input: footerBuffer, top: height, left: 0 }]).toBuffer();
