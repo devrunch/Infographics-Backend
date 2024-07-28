@@ -6,9 +6,13 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const Admin = require('./models/admin');  
 const checkUserJwt = require('./middleware/admin');
+const cookieParser = require('cookie-parser');
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({
+  credentials: true,
+}));
+app.use(cookieParser());
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
@@ -62,12 +66,9 @@ app.post('/admin', async (req, res) => {
     if (!admin || !admin.isValidPassword(password)) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-
-    // Generate a JWT token
     const token = admin.generateAuthToken();
-    console.log(token)
-    // Return the token to the client
-    res.json({ token });
+
+    res.cookie("infojwttoken",token,{maxAge:1000*60*60*24}).json({ token });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Internal server error' });
