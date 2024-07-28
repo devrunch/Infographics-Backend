@@ -5,7 +5,7 @@ const infographicRoutes = require('./routes/infographicRoutes');
 const dotenv = require('dotenv');   
 const cors = require('cors');
 const Admin = require('./models/admin');  
-const checkUserJwt = require('./routes/infographicRoutes');
+const checkUserJwt = require('./middleware/admin');
 dotenv.config();
 const app = express();
 app.use(cors());
