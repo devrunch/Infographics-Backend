@@ -1,6 +1,6 @@
 const express = require('express');
 const infographicController = require('../controllers/infographicController');
-const jwt = require('jsonwebtoken');
+const User = require('../models/admin');
 const router = express.Router();
 
 // Middleware to check user JWT
@@ -10,7 +10,7 @@ const checkUserJwt = (req, res, next) => {
         return res.status(401).json({ message: 'Unauthorized' ,auth:false });
     }
     try {
-        const decodedToken = jwt.verify(token, 'your_secret_key');
+        const decodedToken = User.validateAuthToken(token);
         req.user = decodedToken;
         next();
     } catch (error) {
@@ -21,7 +21,6 @@ const checkUserJwt = (req, res, next) => {
 // Use the middleware in the routes
 
 // Upload Infographic
-router.get('/auth/admin',checkUserJwt, (req, res) => { res.status(200).json({ message: 'Authorized',auth:true }); });
 router.post('/upload',checkUserJwt, infographicController.uploadMiddleware, infographicController.uploadInfographic);
 
 // Get all Infographics
@@ -40,3 +39,4 @@ router.delete('/:id',checkUserJwt, infographicController.deleteInfographic);
 // Delete Infographic
 
 module.exports = router;
+module.exports = checkUserJwt;

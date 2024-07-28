@@ -13,7 +13,14 @@ const userSchema = new mongoose.Schema({
         required: true
     }
 });
-
+userSchema.statics.validateAuthToken = function(token) {
+    try {
+        const decoded = jwt.verify(token, 'your_secret_key');
+        return decoded;
+    } catch (error) {
+        return null;
+    }
+};
 // Hash the password before saving
 userSchema.pre('save', async function(next) {
     if (this.isModified('password')) {
@@ -28,6 +35,7 @@ userSchema.methods.generateAuthToken = function() {
     const token = jwt.sign({ _id: this._id }, 'your_secret_key',{ expiresIn: '1d' });
     return token;
 };
+
 
 // Check if the provided password matches the stored password
 userSchema.methods.isValidPassword = async function(password) {
