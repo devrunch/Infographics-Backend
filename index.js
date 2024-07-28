@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const infographicRoutes = require('./routes/infographicRoutes');
 const dotenv = require('dotenv');   
 const cors = require('cors');
+const Admin = require('./models/admin');  
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -45,4 +46,26 @@ mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.listen(PORT, () => { 
     console.log(`Server running on port ${PORT}`);
+});
+app.post('/admin', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Find the admin by email
+    const admin = await Admin.findOne({ username });
+
+    // Check if admin exists and password is correct
+    if (!admin || !admin.isValidPassword(password)) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Generate a JWT token
+    const token = admin.generateAuthToken();
+
+    // Return the token to the client
+    res.json({ token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
