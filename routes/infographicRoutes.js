@@ -33,8 +33,9 @@ router.get('/tags', infographicController.allAvailbleTags);
 router.get('/search', infographicController.searchInfographics);
 router.get('/:id', infographicController.getInfographic);
 router.post('/:id/download',checkUserJwt, infographicController.downloadInfographic);
-router.patch('/:id',checkUserJwt, infographicController.updateInfographic);
+router.post('/:id',checkUserJwt, infographicController.updateInfographic);
 router.delete('/:id',checkUserJwt, infographicController.deleteInfographic);
+
 // Update Infographic
 // Delete Infographic
 
