@@ -21,7 +21,7 @@ const checkUserJwt = (req, res, next) => {
 // Use the middleware in the routes
 
 // Upload Infographic
-router.get('admin/auth',checkUserJwt, (req, res) => { res.status(200).json({ message: 'Authorized',auth:true }); });
+router.get('/auth/admin',checkUserJwt, (req, res) => { res.status(200).json({ message: 'Authorized',auth:true }); });
 router.post('/upload',checkUserJwt, infographicController.uploadMiddleware, infographicController.uploadInfographic);
 
 // Get all Infographics
