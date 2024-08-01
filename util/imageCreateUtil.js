@@ -52,10 +52,10 @@ async function createFooterImage(footerInfo, width, bgColor, height) {
       <div class="footer">
         <div class="wrapper">
 
-            ${footerInfo.isLogo `<div class="logo-wrapper">
+            ${footerInfo.isLogo? `<div class="logo-wrapper">
                 <img src="${footerInfo.logoBase64 || "https://work.alive.com/wp-content/themes/mytheme/assets/images/placeholder-logo.jpg"}"
                 alt="" style="height:80vh; margin:5px;"/>
-            </div>`}
+            </div>`:''}
             <div class="info">
             <div class="info-wrap">
               <svg
