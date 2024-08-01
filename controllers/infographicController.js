@@ -53,7 +53,7 @@ exports.uploadInfographic = async (req, res) => {
         const originalImageBuffer = fs.readFileSync(originalFilePath);
 
         // Create footer image
-        const footerImageBuffer = await addFooterToImage(originalImageBuffer,{website:"yourwebsite.com",email:"your@email.com",phone:"1234567890",name:"yourname"}, '#60a5fa');
+        const footerImageBuffer = await addFooterToImage(originalImageBuffer,{website:"yourwebsite.com",email:"your@email.com",phone:"1234567890",name:"yourname",isLogo:True}, '#60a5fa');
         const footerImagePath = path.join('uploads', `footer-${req.file.filename}`);
         fs.writeFileSync(footerImagePath, footerImageBuffer);
 
