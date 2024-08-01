@@ -10,8 +10,10 @@ const checkUserJwt = (req, res, next) => {
 
     try {
         const decodedToken = User.validateAuthToken(token);
+        if(!decodedToken){
+        throw new Error('Invalid Token')
+        }
         req.user = decodedToken;
-        console.log('Admin Logged')
         next();
     } catch (error) {
         return res.status(401).json({ error: 'Invalid token' });
