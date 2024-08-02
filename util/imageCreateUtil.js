@@ -101,7 +101,7 @@ async function createFooterImage(footerInfo, width, bgColor, height) {
               <p>${footerInfo.phone}</p>
             </div>
             ${
-    footerInfo.email  && footerInfo.email==''?
+    footerInfo.email  && footerInfo.email!=''?
             `<div class="info-wrap">
               <svg
                 fill="#fff"
@@ -118,7 +118,7 @@ async function createFooterImage(footerInfo, width, bgColor, height) {
             </div>`:''
             }
             ${
-    footerInfo.website && footerInfo.website==''?
+    footerInfo.website && footerInfo.website!=''?
               `<div class="info-wrap">
               <svg
                 width="35px"
