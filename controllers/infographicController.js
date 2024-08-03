@@ -141,7 +141,12 @@ exports.searchInfographics = async (req, res) => {
         const filter = {};
 
         if (description) {
-            filter.description = new RegExp(description, 'i'); // Case-insensitive search
+            const regex = new RegExp(description, 'i'); // Case-insensitive search
+            filter.$or = [
+                { title: regex },
+                { description: regex },
+                { tags: { $elemMatch: { $regex: regex } } }
+            ];
         }
 
         if (tag) {
@@ -168,6 +173,7 @@ exports.searchInfographics = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 exports.downloadInfographic = async (req, res) => {
