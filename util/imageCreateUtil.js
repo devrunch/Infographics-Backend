@@ -53,7 +53,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             grid-template-columns: repeat(2, 1fr);
             gap: 0px 40px;
             justify-content: start;
-            
+            margin-top: -1px;
         }
         .info-wrap {
             display: flex;
