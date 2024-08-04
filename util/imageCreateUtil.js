@@ -1,62 +1,69 @@
 const puppeteer = require('puppeteer');
 const sharp = require('sharp');
 
-async function createFooterImage(footerInfo, width, bgColor, height) {
+async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   const htmlContent = `
-      <html>
-    <head>
-      <style>
-      * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          }
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        img {
+            width: 100%;
+            /* height: 100vh; */
+            object-fit: cover;
+        }
         .footer {
-          background:${bgColor || '#000'};
-          padding-top: 5px;
-          padding-bottom: 5px;
-          }
-        .wrapper {
-          display: flex;
-          justify-content: space-around;
-          align-items: center;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background-color:${ bgColor || '#333'};
+            color: white;
+            line-height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0px 50px;
+            padding:0px 10px;
+        }
+        .logo img {
+            width: 150px;
+            height: 150px;
+            border-radius: 100%;
+            border: 2px solid white;
         }
         .info {
-          margin-left: 20px;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0px 40px;
+            justify-content: start;
+            
         }
         .info-wrap {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin: 10px;
-          margin-right: 20px;
-          color: #fff;
-          font-size: 2rem;
-          font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            font-size: 2.5vh;
         }
-
- .logo-wrapper{
-            border-radius: 999px;
-            background: #fff;
-            overflow: hidden;
-        }
-
-      </style>
-    </head>
-    <body>
-      <div class="footer">
-        <div class="wrapper">
-
-            ${footerInfo.isLogo? `<div class="logo-wrapper">
-                <img src="${footerInfo.logoBase64 || "https://work.alive.com/wp-content/themes/mytheme/assets/images/placeholder-logo.jpg"}"
-                alt="" style="height:80vh; margin:5px;"/>
-            </div>`:''}
-            <div class="info">
+    </style>
+</head>
+<body>
+    <img src="http://localhost:3000/uploads/${imgLink}" alt="">
+    <div class="footer">
+        ${footerInfo.isLogo?`<div class="logo">
+            <img src="${footerInfo.logoBase64||"https://as2.ftcdn.net/v2/jpg/04/78/56/33/1000_F_478563312_HuepEVbPHRGC0dsbXOXL1YSuFIkWEm2m.jpg"}" alt="">
+        </div>`:''}
+        <div class="info">
             <div class="info-wrap">
               <svg
                 width="35px"
@@ -100,27 +107,8 @@ async function createFooterImage(footerInfo, width, bgColor, height) {
               </svg>
               <p>${footerInfo.phone}</p>
             </div>
-            ${
-    footerInfo.email  && footerInfo.email!=''?
-            `<div class="info-wrap">
-              <svg
-                fill="#fff"
-                width="30px"
-                height="30px"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M16 7.38A7.82 7.82 0 0 0 8 .5a7.82 7.82 0 0 0-8 6.88v1.24a7.82 7.82 0 0 0 8 6.88 7.82 7.82 0 0 0 8-6.88V7.38zm-1.25 0h-3a11.34 11.34 0 0 0-.43-2.54 7.6 7.6 0 0 0 1.75-1 6 6 0 0 1 1.65 3.54zm-9.18 0a9.69 9.69 0 0 1 .37-2.14A8.43 8.43 0 0 0 8 5.5a8.49 8.49 0 0 0 2.09-.26 10.2 10.2 0 0 1 .37 2.14zm4.92 1.24a9.59 9.59 0 0 1-.37 2.14 8.53 8.53 0 0 0-4.18 0 9.69 9.69 0 0 1-.37-2.14zm.4-5A11.82 11.82 0 0 0 10 2a6.89 6.89 0 0 1 2 1 6.57 6.57 0 0 1-1.14.66zm-2.6-1.86a10 10 0 0 1 1.38 2.3A7.63 7.63 0 0 1 8 4.25a7.56 7.56 0 0 1-1.67-.19 9.82 9.82 0 0 1 1.38-2.3h.58zm-3.15 1.9A6.57 6.57 0 0 1 4 3a6.89 6.89 0 0 1 2-1 10.38 10.38 0 0 0-.86 1.66zM3 3.83a7.6 7.6 0 0 0 1.75 1 11 11 0 0 0-.43 2.54h-3A6 6 0 0 1 3 3.83zM1.28 8.62h3a11 11 0 0 0 .43 2.54 7.6 7.6 0 0 0-1.75 1 6 6 0 0 1-1.68-3.54zm3.86 3.72A10.38 10.38 0 0 0 6 14a6.89 6.89 0 0 1-2-1 6.57 6.57 0 0 1 1.14-.66zm2.57 1.9a9.82 9.82 0 0 1-1.38-2.3 7.43 7.43 0 0 1 3.34 0 9.76 9.76 0 0 1-1.38 2.3h-.58zm3.15-1.9a6.57 6.57 0 0 1 1.19.66 7.24 7.24 0 0 1-2 1 11.48 11.48 0 0 0 .81-1.66zm2.14-.17a7.6 7.6 0 0 0-1.75-1 10.8 10.8 0 0 0 .43-2.54h3A6 6 0 0 1 13 12.17z"
-                />
-              </svg>
-              <p>${footerInfo.email}</p>
-            </div>`:''
-            }
-            ${
-    footerInfo.website && footerInfo.website!=''?
-              `<div class="info-wrap">
-              <svg
+           ${footerInfo.email ? `<div class="info-wrap">
+            <svg
                 width="35px"
                 height="35px"
                 viewBox="0 0 24 24"
@@ -135,24 +123,36 @@ async function createFooterImage(footerInfo, width, bgColor, height) {
                   stroke-linejoin="round"
                   />
               </svg>
+              
+              <p>${footerInfo.email}</p>
+            </div>`:''}
+            ${footerInfo.website?`<div class="info-wrap">
+                <svg
+                fill="#fff"
+                width="30px"
+                height="30px"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M16 7.38A7.82 7.82 0 0 0 8 .5a7.82 7.82 0 0 0-8 6.88v1.24a7.82 7.82 0 0 0 8 6.88 7.82 7.82 0 0 0 8-6.88V7.38zm-1.25 0h-3a11.34 11.34 0 0 0-.43-2.54 7.6 7.6 0 0 0 1.75-1 6 6 0 0 1 1.65 3.54zm-9.18 0a9.69 9.69 0 0 1 .37-2.14A8.43 8.43 0 0 0 8 5.5a8.49 8.49 0 0 0 2.09-.26 10.2 10.2 0 0 1 .37 2.14zm4.92 1.24a9.59 9.59 0 0 1-.37 2.14 8.53 8.53 0 0 0-4.18 0 9.69 9.69 0 0 1-.37-2.14zm.4-5A11.82 11.82 0 0 0 10 2a6.89 6.89 0 0 1 2 1 6.57 6.57 0 0 1-1.14.66zm-2.6-1.86a10 10 0 0 1 1.38 2.3A7.63 7.63 0 0 1 8 4.25a7.56 7.56 0 0 1-1.67-.19 9.82 9.82 0 0 1 1.38-2.3h.58zm-3.15 1.9A6.57 6.57 0 0 1 4 3a6.89 6.89 0 0 1 2-1 10.38 10.38 0 0 0-.86 1.66zM3 3.83a7.6 7.6 0 0 0 1.75 1 11 11 0 0 0-.43 2.54h-3A6 6 0 0 1 3 3.83zM1.28 8.62h3a11 11 0 0 0 .43 2.54 7.6 7.6 0 0 0-1.75 1 6 6 0 0 1-1.68-3.54zm3.86 3.72A10.38 10.38 0 0 0 6 14a6.89 6.89 0 0 1-2-1 6.57 6.57 0 0 1 1.14-.66zm2.57 1.9a9.82 9.82 0 0 1-1.38-2.3 7.43 7.43 0 0 1 3.34 0 9.76 9.76 0 0 1-1.38 2.3h-.58zm3.15-1.9a6.57 6.57 0 0 1 1.19.66 7.24 7.24 0 0 1-2 1 11.48 11.48 0 0 0 .81-1.66zm2.14-.17a7.6 7.6 0 0 0-1.75-1 10.8 10.8 0 0 0 .43-2.54h3A6 6 0 0 1 13 12.17z"
+                />
+              </svg>
               <p>${footerInfo.website}</p>
-            </div>`:''
-                }
+            </div>`:''}
           </div>
-        </div>
-      </div>
-    </body>
-  </html>
+    </div>
+</body>
+</html>
   `;
-
   await page.setContent(htmlContent);
-  await page.setViewport({ width: width, height:160 });
+  await page.setViewport({ width: width ,height:height});
   const footerBuffer = await page.screenshot({ omitBackground: true });
 
   await browser.close();
   return footerBuffer;
 }
-async function addFooterToImage(imageBuffer, footerInfo, bgColor) {
+async function addFooterToImage(imageBuffer, footerInfo, bgColor,imgLink) {
   try {
     // Load the original image
     const image = sharp(imageBuffer);
@@ -163,15 +163,9 @@ async function addFooterToImage(imageBuffer, footerInfo, bgColor) {
     const height = metadata.height;
 
     // Create the footer image using HTML and CSS
-    const footerBuffer = await createFooterImage(footerInfo, width, bgColor, height / 7);
-
+    const footerBuffer = await createFooterImage(footerInfo, width, bgColor, height+200,imgLink);
     // Composite the footer with the original image
-    return await sharp(imageBuffer)
-      .extend({
-        bottom: 150,
-        background: { r: 0, g: 0, b: 0, alpha: 0 }
-      })
-      .composite([{ input: footerBuffer, top: height, left: 0 }]).toBuffer();
+    return footerBuffer
 
   } catch (err) {
     console.log(err)

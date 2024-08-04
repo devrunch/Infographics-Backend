@@ -196,7 +196,7 @@ exports.downloadInfographic = async (req, res) => {
         //     email: 'Company Email'
         // };
 
-        const outBuffer = await addFooterToImage(imageBuffer, req.body.info, req.body.bgColor);
+        const outBuffer = await addFooterToImage(imageBuffer, req.body.info, req.body.bgColor,infographic.image);
         res.set('Content-Disposition', `attachment; filename=${infographic.image}`);
         res.set('Content-Type', 'image/png');
         res.send(outBuffer);
