@@ -58,7 +58,7 @@ async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
     </style>
 </head>
 <body>
-    <img src="http://localhost:3000/uploads/${imgLink}" alt="">
+    <img src="https://utility.caclouddesk.com/uploads/${imgLink}" alt="">
     <div class="footer">
         ${footerInfo.isLogo?`<div class="logo">
             <img src="${footerInfo.logoBase64||"https://as2.ftcdn.net/v2/jpg/04/78/56/33/1000_F_478563312_HuepEVbPHRGC0dsbXOXL1YSuFIkWEm2m.jpg"}" alt="">
