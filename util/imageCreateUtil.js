@@ -43,8 +43,10 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             border: 2px solid white;
         }
         .logo {
-    background-color: white;
-}
+            width: 150px;
+            height: 150px;
+            background-color: white;
+        }
         .info {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
