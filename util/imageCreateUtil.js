@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const sharp = require('sharp');
 
-async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
+async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
@@ -27,7 +27,7 @@ async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
             bottom: 0;
             width: 100%;
             height: 200px;
-            background-color:${ bgColor || '#333'};
+            background-color:${bgColor || '#333'};
             color: white;
             line-height: 50px;
             display: flex;
@@ -42,6 +42,9 @@ async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
             border-radius: 100%;
             border: 2px solid white;
         }
+        .logo {
+    background-color: white;
+}
         .info {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -60,9 +63,9 @@ async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
 <body>
     <img src="https://utility.caclouddesk.com/uploads/${imgLink}" alt="">
     <div class="footer">
-        ${footerInfo.isLogo?`<div class="logo">
-            <img src="${footerInfo.logoBase64||"https://as2.ftcdn.net/v2/jpg/04/78/56/33/1000_F_478563312_HuepEVbPHRGC0dsbXOXL1YSuFIkWEm2m.jpg"}" alt="">
-        </div>`:''}
+        ${footerInfo.isLogo ? `<div class="logo">
+            <img src="${footerInfo.logoBase64 || "https://as2.ftcdn.net/v2/jpg/04/78/56/33/1000_F_478563312_HuepEVbPHRGC0dsbXOXL1YSuFIkWEm2m.jpg"}" alt="">
+        </div>`: ''}
         <div class="info">
             <div class="info-wrap">
               <svg
@@ -125,8 +128,8 @@ async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
               </svg>
               
               <p>${footerInfo.email}</p>
-            </div>`:''}
-            ${footerInfo.website?`<div class="info-wrap">
+            </div>`: ''}
+            ${footerInfo.website ? `<div class="info-wrap">
                 <svg
                 fill="#fff"
                 width="30px"
@@ -139,20 +142,20 @@ async function createFooterImage(footerInfo, width, bgColor, height,imgLink) {
                 />
               </svg>
               <p>${footerInfo.website}</p>
-            </div>`:''}
+            </div>`: ''}
           </div>
     </div>
 </body>
 </html>
   `;
   await page.setContent(htmlContent);
-  await page.setViewport({ width: width ,height:height});
+  await page.setViewport({ width: width, height: height });
   const footerBuffer = await page.screenshot({ omitBackground: true });
 
   await browser.close();
   return footerBuffer;
 }
-async function addFooterToImage(imageBuffer, footerInfo, bgColor,imgLink) {
+async function addFooterToImage(imageBuffer, footerInfo, bgColor, imgLink) {
   try {
     // Load the original image
     const image = sharp(imageBuffer);
@@ -163,7 +166,7 @@ async function addFooterToImage(imageBuffer, footerInfo, bgColor,imgLink) {
     const height = metadata.height;
 
     // Create the footer image using HTML and CSS
-    const footerBuffer = await createFooterImage(footerInfo, width, bgColor, height+200,imgLink);
+    const footerBuffer = await createFooterImage(footerInfo, width, bgColor, height + 200, imgLink);
     // Composite the footer with the original image
     return footerBuffer
 
