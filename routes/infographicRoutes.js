@@ -4,13 +4,7 @@ const User = require('../models/admin');
 const checkUserJwt = require('../middleware/admin');
 const router = express.Router();
 
-// Middleware to check user JW
-
-// Use the middleware in the routes
-
-// Upload Infographic
 router.post('/upload',checkUserJwt, infographicController.uploadMiddleware, infographicController.uploadInfographic);
-
 // Get all Infographics
 router.get('/', infographicController.getAllInfographics);
 router.get('/all', infographicController.getAllInfographics1);

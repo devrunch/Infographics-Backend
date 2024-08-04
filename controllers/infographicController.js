@@ -207,10 +207,10 @@ exports.downloadInfographic = async (req, res) => {
 
 exports.categoryInfographics = async (req, res) => {
     try {
-        // Aggregate to get all unique tags
+        // Aggregate to get all unique tags at index 0
         const tagsAggregation = await Infographic.aggregate([
-            { $unwind: "$tags" },
-            { $group: { _id: "$tags" } }
+            { $project: { firstTag: { $arrayElemAt: ["$tags", 0] } } },
+            { $group: { _id: "$firstTag" } }
         ]);
 
         const uniqueTags = tagsAggregation.map(tag => tag._id);
