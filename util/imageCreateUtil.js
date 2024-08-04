@@ -57,6 +57,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             align-items: center;
             justify-content: start;
             font-size: 2.5vh;
+            font-family: 'System-ui', sans-serif;
         }
     </style>
 </head>
