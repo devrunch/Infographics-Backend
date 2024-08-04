@@ -34,7 +34,8 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             justify-content: center;
             align-items: center;
             gap: 0px 50px;
-            padding:0px 10px;
+            padding: 0px 10px;
+            margin-top: -2px;
         }
         .logo img {
             width: 150px;
@@ -53,7 +54,6 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             grid-template-columns: repeat(2, 1fr);
             gap: 0px 40px;
             justify-content: start;
-            margin-top: -3px;
         }
         .info-wrap {
             display: flex;
