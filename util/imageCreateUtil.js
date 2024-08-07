@@ -35,7 +35,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             align-items: center;
             gap: 0px 50px;
             padding: 0px 10px;
-            margin-top: -2px;
+            margin-top: -5px;
         }
         .logo img {
             width: 150px;
@@ -52,7 +52,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
         .info {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0px 40px;
+            gap: 15px 50px;
             justify-content: start;
         }
         .info-wrap {
@@ -130,7 +130,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
                   stroke-linejoin="round"
                   />
               </svg>
-              
+
               <p>${footerInfo.email}</p>
             </div>`: ''}
             ${footerInfo.website ? `<div class="info-wrap">
