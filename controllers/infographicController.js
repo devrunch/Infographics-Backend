@@ -44,11 +44,10 @@ exports.uploadInfographic = async (req, res) => {
 
         const infographic = new Infographic({
             ...req.body,
+            tags: req.body.tags.split(','),
             image: req.file.filename,
         });
-
         await infographic.save();
-
         const originalFilePath = path.join('uploads', req.file.filename);
         const originalImageBuffer = fs.readFileSync(originalFilePath);
 
