@@ -186,15 +186,6 @@ exports.downloadInfographic = async (req, res) => {
         const imagePath = path.join(__dirname, '../uploads/', infographic.image);
         const imageBuffer = fs.readFileSync(imagePath);
 
-        // Add footer to the image
-        // const footerInfo = {
-        //     logoBase64: 'base64-encoded-image',
-        //     name: 'Company Name',
-        //     website: 'Company Address',
-        //     phone: 'Company Phone',
-        //     email: 'Company Email'
-        // };
-
         const outBuffer = await addFooterToImage(imageBuffer, req.body.info, req.body.bgColor,infographic.image);
         res.set('Content-Disposition', `attachment; filename=${infographic.image}`);
         res.set('Content-Type', 'image/png');
