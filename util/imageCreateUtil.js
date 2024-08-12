@@ -55,6 +55,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             color: #fff;
             font-size: 32px;
             align-items: center;  
+            font-family: system-ui, sans-serif;
 
         }
         .info {
