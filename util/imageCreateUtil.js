@@ -53,7 +53,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             grid-template-columns: repeat(1, 1fr);
             gap: 20px 40px;
             color: #fff;
-            font-size: 32px;
+            font-size: 28px;
             align-items: center;  
             font-family: system-ui, sans-serif;
 
