@@ -47,7 +47,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             background-color: #fff;
         }
         .info_container {
-            min-width: 40%;
+            min-width: 50%;
             max-width: 80%;
             display: grid;
             grid-template-columns: repeat(1, 1fr);
