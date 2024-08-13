@@ -25,9 +25,11 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
       }
       .footer {
         margin: -5px;
+        padding: 0px 10px; 
         width: 100%;
         height: 200px;
         background-color: ${bgColor || "#000"};
+        gap: 0px 20px;
         display: flex;
         justify-content: start;
         align-items: center;
