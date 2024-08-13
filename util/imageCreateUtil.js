@@ -29,7 +29,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
         height: 200px;
         background-color: ${bgColor || "#000"};
         display: flex;
-        justify-content: space-around;
+        justify-content: start;
         align-items: center;
       }
         .logo_container {
