@@ -57,8 +57,8 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
             color: #fff;
             font-size: 28px;
             align-items: center;  
-            font-family: system-ui, sans-serif;
             font-weight: bold;
+            font-family: system-ui, sans-serif;
 
         }
         .info {
@@ -72,7 +72,7 @@ async function createFooterImage(footerInfo, width, bgColor, height, imgLink) {
     </style>
   </head>
   <body>
-    <img src="https://utility.caclouddesk.com/uploads/${imgLink}"/>
+    <img src="${imgLink}"/>
     <div class="footer">
         <div class="logo_container">
             <img src="${footerInfo.logoBase64 || "https://as2.ftcdn.net/v2/jpg/04/78/56/33/1000_F_478563312_HuepEVbPHRGC0dsbXOXL1YSuFIkWEm2m.jpg"}"/>
