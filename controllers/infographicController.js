@@ -140,12 +140,23 @@ exports.searchInfographics = async (req, res) => {
         const filter = {};
 
         if (description) {
-            const regex = new RegExp(description, 'i'); // Case-insensitive search
-            filter.$or = [
-                { title: regex },
-                { description: regex },
-                { tags: { $elemMatch: { $regex: regex } } }
-            ];
+            // Split description into individual words (tokens) and sort by word length (longest first)
+            const words = description
+                .split(' ')
+                .map(word => word.trim())
+                .sort((a, b) => b.length - a.length); // Sort by word length in descending order
+
+            // Create a $or query to match any of the words in title, description, or tags
+            filter.$or = words.map(word => {
+                const regex = new RegExp(word, 'i'); // Case-insensitive search for each word
+                return {
+                    $or: [
+                        { title: regex },
+                        { description: regex },
+                        { tags: { $elemMatch: { $regex: regex } } }
+                    ]
+                };
+            });
         }
 
         if (tag) {
