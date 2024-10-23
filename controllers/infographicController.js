@@ -165,24 +165,53 @@ exports.searchInfographics = async (req, res) => {
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
 
+        // Perform the search
         const infographics = await Infographic.find(filter)
             .skip(skip)
             .limit(parseInt(limit));
 
+        // Scoring logic: Create a score based on the matching rules
+        const scoredInfographics = infographics.map(infographic => {
+            let score = 0;
+
+            // Check if the title matches the query (high score)
+            if (description && infographic.title.match(new RegExp(description, 'i'))) {
+                score += 3; // Highest priority for title-title matches
+            }
+
+            // Check if the description matches the query (medium score)
+            if (description && infographic.description.match(new RegExp(description, 'i'))) {
+                score += 2; // Medium priority for description-description matches
+            }
+
+            // Check if the category matches the query (lower score)
+            if (tag && infographic.category === tag) {
+                score += 1; // Low priority for category-category matches
+            }
+
+            return { ...infographic._doc, score }; // Attach the score to the infographic object
+        });
+
+        // Sort the infographics by score (higher score comes first)
+        scoredInfographics.sort((a, b) => b.score - a.score);
+
+        // Total matching documents
         const total = await Infographic.countDocuments(filter);
 
+        // Return the sorted results
         res.json({
             total,
             page: parseInt(page),
             limit: parseInt(limit),
             totalPages: Math.ceil(total / parseInt(limit)),
-            infographics
+            infographics: scoredInfographics
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 
