@@ -155,7 +155,11 @@ exports.deleteInfographic = async (req, res) => {
 
 exports.searchInfographics = async (req, res) => {
     try {
-        const { description, tag, page = 1, limit = 10 } = req.query;
+        console.log(req.query)
+        let { description, tag, page = 1, limit = 10 } = req.query;
+        description = decodeURIComponent(description);
+        tag = decodeURIComponent(tag);  
+        console.log({description,tag})
         const cacheKey = JSON.stringify({ tag });
 
         let infographics = getCache(cacheKey);
