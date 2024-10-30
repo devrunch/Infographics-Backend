@@ -179,16 +179,32 @@ exports.searchInfographics = async (req, res) => {
         }
 
         // Custom Scoring Logic
-        
+        const scoredResults = searchResults.map(infographic => {
+            let score = 0;
+
+            if (description && infographic.title.match(new RegExp(description, 'i'))) {
+                score += 3; // Highest score for title matches
+            }
+            if (tag && infographic.tags.includes(tag)) {
+                score += 2; // Medium score for tag matches
+            }
+            if (description && infographic.description.match(new RegExp(description, 'i'))) {
+                score += 1; // Lowest score for description matches
+            }
+
+            return { ...infographic._doc, score };
+        });
+
+        scoredResults.sort((a, b) => b.score - a.score);
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
-        const paginatedResults = searchResults.slice(skip, skip + parseInt(limit));
+        const paginatedResults = scoredResults.slice(skip, skip + parseInt(limit));
 
         const response = {
-            total: searchResults.length,
+            total: scoredResults.length,
             page: parseInt(page),
             limit: parseInt(limit),
-            totalPages: Math.ceil(searchResults.length / parseInt(limit)),
+            totalPages: Math.ceil(scoredResults.length / parseInt(limit)),
             infographics: paginatedResults
         };
 
