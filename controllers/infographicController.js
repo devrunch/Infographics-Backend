@@ -3,7 +3,25 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const { addFooterToImage } = require('../util/imageCreateUtil');
+const Fuse = require('fuse.js');
+const cache = new Map(); // Simple in-memory cache
+const CACHE_EXPIRATION = 24 * 60 * 60 * 1000;
+// Helper function to get cache with expiration check
+const getCache = (key) => {
+    const cached = cache.get(key);
+    if (cached && (Date.now() - cached.timestamp < CACHE_EXPIRATION)) {
+        return cached.data;
+    } else {
+        // If expired, delete cache
+        cache.delete(key);
+        return null;
+    }
+};
 
+// Helper function to set cache with timestamp
+const setCache = (key, data) => {
+    cache.set(key, { data, timestamp: Date.now() });
+};
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -134,84 +152,58 @@ exports.deleteInfographic = async (req, res) => {
     }
 };
 
+
 exports.searchInfographics = async (req, res) => {
     try {
         const { description, tag, page = 1, limit = 10 } = req.query;
-        const filter = {};
+        const cacheKey = JSON.stringify({ tag });
 
+        let infographics = getCache(cacheKey);
+        if (!infographics) {
+            infographics = await Infographic.find(tag ? { tags: { $in: [tag] } } : {});
+            setCache(cacheKey, infographics);
+        }
+
+        const options = {
+            keys: ['title', 'description', 'tags'],
+            includeScore: true,
+            threshold: 0.4,
+        };
+        const fuse = new Fuse(infographics, options);
+
+        let searchResults;
         if (description) {
-            // Split description into individual words (tokens) and sort by word length (longest first)
-            const words = description
-                .split(' ')
-                .map(word => word.trim())
-                .sort((a, b) => b.length - a.length); // Sort by word length in descending order
-
-            // Create a $or query to match any of the words in title, description, or tags
-            filter.$or = words.map(word => {
-                const regex = new RegExp(word, 'i'); // Case-insensitive search for each word
-                return {
-                    $or: [
-                        { title: regex },
-                        { description: regex },
-                        { tags: { $elemMatch: { $regex: regex } } }
-                    ]
-                };
-            });
+            searchResults = fuse.search(description).map(result => result.item);
+        } else {
+            searchResults = infographics;
         }
 
-        if (tag) {
-            filter.tags = { $in: [tag] }; // Search for infographics containing the tag in the tags array
-        }
+        // Custom Scoring Logic
+        
 
         const skip = (parseInt(page) - 1) * parseInt(limit);
+        const paginatedResults = searchResults.slice(skip, skip + parseInt(limit));
 
-        // Perform the search
-        const infographics = await Infographic.find(filter)
-            .skip(skip)
-            .limit(parseInt(limit));
-
-        // Scoring logic: Create a score based on the matching rules
-        const scoredInfographics = infographics.map(infographic => {
-            let score = 0;
-
-            // Check if the title matches the query (high score)
-            if (description && infographic.title.match(new RegExp(description, 'i'))) {
-                score += 3; // Highest priority for title-title matches
-            }
-
-            // Check if the description matches the query (medium score)
-            if (description && infographic.description.match(new RegExp(description, 'i'))) {
-                score += 2; // Medium priority for description-description matches
-            }
-
-            // Check if the category matches the query (lower score)
-            if (tag && infographic.category === tag) {
-                score += 1; // Low priority for category-category matches
-            }
-
-            return { ...infographic._doc, score }; // Attach the score to the infographic object
-        });
-
-        // Sort the infographics by score (higher score comes first)
-        scoredInfographics.sort((a, b) => b.score - a.score);
-
-        // Total matching documents
-        const total = await Infographic.countDocuments(filter);
-
-        // Return the sorted results
-        res.json({
-            total,
+        const response = {
+            total: searchResults.length,
             page: parseInt(page),
             limit: parseInt(limit),
-            totalPages: Math.ceil(total / parseInt(limit)),
-            infographics: scoredInfographics
-        });
+            totalPages: Math.ceil(searchResults.length / parseInt(limit)),
+            infographics: paginatedResults
+        };
+
+        res.json(response);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
+// API to clear cache
+exports.clearCache = (req, res) => {
+    cache.clear();
+    res.json({ message: 'Cache cleared successfully' });
+};
 
 
 

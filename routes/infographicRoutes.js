@@ -16,7 +16,7 @@ router.get('/:id', infographicController.getInfographic);
 router.post('/:id/download', infographicController.downloadInfographic);
 router.post('/:id',checkUserJwt, infographicController.updateInfographic);
 router.delete('/:id',checkUserJwt, infographicController.deleteInfographic);
-
+router.get('/clearcache',checkUserJwt, infographicController.clearCache);   
 // Update Infographic
 // Delete Infographic
 
